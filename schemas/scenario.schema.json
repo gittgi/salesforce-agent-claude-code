@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.salesforce-agent/schemas/scenario.schema.json",
+  "title": "Salesforce Test Scenario Agent Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "createdAt",
+    "orgAlias",
+    "target",
+    "analysisSummary",
+    "scenarios",
+    "assumptions",
+    "unknowns",
+    "followUpQuestions",
+    "approval"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "orgAlias": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "analysisSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targetResolution",
+        "inspectedFiles",
+        "inspectedMetadata",
+        "inspectedOrgContext",
+        "confirmedBehavior",
+        "inferredBehavior",
+        "dependencies",
+        "sideEffects",
+        "risks"
+      ],
+      "properties": {
+        "targetResolution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inspectedFiles": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "inspectedMetadata": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "inspectedOrgContext": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "confirmedBehavior": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "inferredBehavior": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/dependency" }
+        },
+        "sideEffects": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "risks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/risk" }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/scenario" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "followUpQuestions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "stage", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "stage": {
+          "type": "string",
+          "enum": ["scenario"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "APPROVED", "REJECTED"]
+        },
+        "approvedBy": {
+          "type": ["string", "null"]
+        },
+        "approvedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "component", "sourceTargets"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ApexClass",
+            "ApexMethod",
+            "ApexTrigger",
+            "Flow",
+            "LWC",
+            "Metadata",
+            "Commit",
+            "PR",
+            "WorkingDiff",
+            "Unknown"
+          ]
+        },
+        "component": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entryPoint": {
+          "type": ["string", "null"]
+        },
+        "sourceRef": {
+          "type": ["string", "null"]
+        },
+        "sourceTargets": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sourceTarget" }
+        }
+      }
+    },
+    "sourceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "type"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "type": ["string", "null"]
+        },
+        "entryPoint": {
+          "type": ["string", "null"]
+        },
+        "changeKind": {
+          "type": ["string", "null"],
+          "enum": ["ADDED", "MODIFIED", "DELETED", "RENAMED", "REQUESTED", "UNKNOWN", null]
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name", "reason"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Apex",
+            "SObject",
+            "Field",
+            "SOQL",
+            "Flow",
+            "Trigger",
+            "Permission",
+            "Sharing",
+            "ValidationRule",
+            "AsyncApex",
+            "ExternalIntegration",
+            "Metadata",
+            "Other"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "description"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mitigation": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenarioId",
+        "title",
+        "priority",
+        "scenarioType",
+        "sourceTarget",
+        "businessBehavior",
+        "given",
+        "when",
+        "then",
+        "expectedResult",
+        "requiredTestData",
+        "unitTestNotes",
+        "e2eValidationNotes",
+        "risks",
+        "assumptions",
+        "unknowns",
+        "cleanupConsiderations"
+      ],
+      "properties": {
+        "scenarioId": {
+          "type": "string",
+          "pattern": "^SCN-[0-9]{3}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["P0", "P1", "P2", "P3"]
+        },
+        "scenarioType": {
+          "type": "string",
+          "enum": ["HAPPY_PATH", "NEGATIVE_PATH", "EDGE_CASE", "BULK", "PERMISSION", "AUTOMATION_SIDE_EFFECT", "REGRESSION"]
+        },
+        "sourceTarget": {
+          "$ref": "#/$defs/sourceTarget"
+        },
+        "businessBehavior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "given": {
+          "type": "string",
+          "minLength": 1
+        },
+        "when": {
+          "type": "string",
+          "minLength": 1
+        },
+        "then": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expectedResult": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requiredTestData": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/testDataRequirement" }
+        },
+        "unitTestNotes": {
+          "$ref": "#/$defs/unitTestNotes"
+        },
+        "e2eValidationNotes": {
+          "$ref": "#/$defs/e2eValidationNotes"
+        },
+        "risks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/risk" }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "cleanupConsiderations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "testDataRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object", "purpose", "fields"],
+      "properties": {
+        "object": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "recordCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "unitTestNotes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "setupGuidance",
+        "assertions",
+        "requiresStartStopTest",
+        "requiresBulkCoverage",
+        "mockingNeeds",
+        "specialConsiderations"
+      ],
+      "properties": {
+        "setupGuidance": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "assertions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "requiresStartStopTest": {
+          "type": "boolean"
+        },
+        "requiresBulkCoverage": {
+          "type": "boolean"
+        },
+        "mockingNeeds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "specialConsiderations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "e2eValidationNotes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "setupGuidance",
+        "executionSteps",
+        "observations",
+        "requiresOrgDataMutation",
+        "requiresUserApproval",
+        "cleanupSteps",
+        "specialConsiderations"
+      ],
+      "properties": {
+        "setupGuidance": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "executionSteps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "observations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "requiresOrgDataMutation": {
+          "type": "boolean"
+        },
+        "requiresUserApproval": {
+          "type": "boolean"
+        },
+        "cleanupSteps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "specialConsiderations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.salesforce-agent/schemas/unit-test-result.schema.json",
+  "title": "Salesforce Apex Unit Test Agent Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "createdAt",
+    "orgAlias",
+    "scenarioInput",
+    "target",
+    "generatedFiles",
+    "modifiedFiles",
+    "testClasses",
+    "deployment",
+    "testRun",
+    "coverage",
+    "scenarioTraceability",
+    "fixRequests",
+    "assumptions",
+    "unknowns",
+    "approval"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "orgAlias": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "scenarioInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schemaVersion", "approvalStatus"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "approvalStatus": { "type": "string", "minLength": 1 }
+      }
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "generatedFiles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fileChange" }
+    },
+    "modifiedFiles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fileChange" }
+    },
+    "testClasses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/testClass" }
+    },
+    "deployment": {
+      "$ref": "#/$defs/deployment"
+    },
+    "testRun": {
+      "$ref": "#/$defs/testRun"
+    },
+    "coverage": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/coverage" }
+    },
+    "scenarioTraceability": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/scenarioTrace" }
+    },
+    "fixRequests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fixRequest" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "stage", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "stage": {
+          "type": "string",
+          "enum": ["test-code"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "APPROVED", "REJECTED"]
+        },
+        "approvedBy": {
+          "type": ["string", "null"]
+        },
+        "approvedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "component", "entryPoint", "sourceTargets"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "component": { "type": "string", "minLength": 1 },
+        "entryPoint": { "type": ["string", "null"] },
+        "sourceRef": { "type": ["string", "null"] },
+        "sourceTargets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceTarget" }
+        }
+      }
+    },
+    "sourceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "type"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "component": { "type": ["string", "null"] },
+        "entryPoint": { "type": ["string", "null"] },
+        "changeKind": {
+          "type": ["string", "null"],
+          "enum": ["ADDED", "MODIFIED", "DELETED", "RENAMED", "REQUESTED", "UNKNOWN", null]
+        }
+      }
+    },
+    "fileChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "type", "purpose"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 }
+      }
+    },
+    "testClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["className", "path", "methods"],
+      "properties": {
+        "className": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "methods": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/testMethod" }
+        }
+      }
+    },
+    "testMethod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["methodName", "scenarioIds"],
+      "properties": {
+        "methodName": { "type": "string", "minLength": 1 },
+        "scenarioIds": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^SCN-[0-9]{3}$" }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted", "status", "method", "jobId", "details"],
+      "properties": {
+        "attempted": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_RUN", "SUCCEEDED", "FAILED", "PARTIAL", "BLOCKED"]
+        },
+        "method": {
+          "type": ["string", "null"],
+          "enum": ["MCP", "SF_CLI", "MIXED", null]
+        },
+        "jobId": { "type": ["string", "null"] },
+        "details": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "testRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempted",
+        "status",
+        "testRunId",
+        "testsRan",
+        "passing",
+        "failing",
+        "skipped",
+        "failures"
+      ],
+      "properties": {
+        "attempted": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_RUN", "PASSED", "FAILED", "PARTIAL", "BLOCKED"]
+        },
+        "testRunId": { "type": ["string", "null"] },
+        "testsRan": { "type": "integer", "minimum": 0 },
+        "passing": { "type": "integer", "minimum": 0 },
+        "failing": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "durationMs": { "type": ["integer", "null"], "minimum": 0 },
+        "failures": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/testFailure" }
+        }
+      }
+    },
+    "testFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["className", "methodName", "message", "classification"],
+      "properties": {
+        "className": { "type": "string", "minLength": 1 },
+        "methodName": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "stackTrace": { "type": ["string", "null"] },
+        "classification": {
+          "type": "string",
+          "enum": ["TEST_CODE", "PRODUCTION_CODE", "METADATA_ORG_CONFIG", "UNKNOWN"]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "percentage"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "percentage": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "coveredLines": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 }
+        },
+        "uncoveredLines": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "scenarioTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenarioId", "status", "testClass", "testMethods", "notes"],
+      "properties": {
+        "scenarioId": { "type": "string", "pattern": "^SCN-[0-9]{3}$" },
+        "status": {
+          "type": "string",
+          "enum": ["COVERED", "PARTIAL", "NOT_COVERED", "BLOCKED"]
+        },
+        "testClass": { "type": ["string", "null"] },
+        "testMethods": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "fixRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "target", "severity", "description", "evidence", "recommendedOwner", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": ["PRODUCTION_CODE", "METADATA_ORG_CONFIG", "SCENARIO_AMBIGUITY", "OTHER"]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "severity": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH", "BLOCKER"]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "recommendedOwner": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["OPEN", "RESOLVED", "DEFERRED"]
+        }
+      }
+    }
+  }
+}

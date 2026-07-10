@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "example-scenario",
+  "createdAt": "2026-07-08T00:00:00+09:00",
+  "orgAlias": "lab-hub",
+  "target": {
+    "type": "ApexClass",
+    "component": "ScenarioVerifierDemoService",
+    "entryPoint": "markAccounts",
+    "sourceRef": null,
+    "sourceTargets": [
+      {
+        "path": "force-app/main/default/classes/ScenarioVerifierDemoService.cls",
+        "type": "ApexClass",
+        "component": "ScenarioVerifierDemoService",
+        "entryPoint": "markAccounts",
+        "changeKind": "REQUESTED"
+      }
+    ]
+  },
+  "analysisSummary": {
+    "targetResolution": "사용자가 명시한 Apex class와 method를 분석 대상으로 선택했다.",
+    "inspectedFiles": [
+      "force-app/main/default/classes/ScenarioVerifierDemoService.cls"
+    ],
+    "inspectedMetadata": [],
+    "inspectedOrgContext": [
+      "Organization: lab-hub"
+    ],
+    "confirmedBehavior": [
+      "markAccounts는 전달받은 Account Id 집합을 처리하고 결과 목록을 반환한다."
+    ],
+    "inferredBehavior": [
+      "Account 입력이 없거나 null이면 빈 결과를 반환해야 할 가능성이 있다."
+    ],
+    "dependencies": [
+      {
+        "type": "SObject",
+        "name": "Account",
+        "reason": "테스트 데이터와 처리 대상 레코드로 사용된다."
+      }
+    ],
+    "sideEffects": [],
+    "risks": [
+      {
+        "level": "MEDIUM",
+        "description": "method 내부 구현을 확인하지 못하면 반환 결과의 정확한 의미를 확정하기 어렵다.",
+        "mitigation": "Apex source를 확인한 뒤 assertion을 구체화한다."
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "scenarioId": "SCN-001",
+      "title": "유효한 Account Id를 전달하면 처리 결과가 반환된다",
+      "priority": "P1",
+      "scenarioType": "HAPPY_PATH",
+      "sourceTarget": {
+        "path": "force-app/main/default/classes/ScenarioVerifierDemoService.cls",
+        "type": "ApexClass",
+        "component": "ScenarioVerifierDemoService",
+        "entryPoint": "markAccounts",
+        "changeKind": "REQUESTED"
+      },
+      "businessBehavior": "유효한 Account Id 집합을 서비스 메서드에 전달하면 각 대상 Account에 대한 처리 결과가 생성된다.",
+      "given": "테스트용 Account 레코드가 존재하고 해당 Id가 입력 집합에 포함되어 있다.",
+      "when": "ScenarioVerifierDemoService.markAccounts가 Account Id 집합으로 호출된다.",
+      "then": "반환된 결과 목록에 처리 대상 Account에 대한 결과가 포함된다.",
+      "expectedResult": "결과 목록의 크기가 입력 Account 수와 일치한다.",
+      "requiredTestData": [
+        {
+          "object": "Account",
+          "purpose": "서비스 메서드의 처리 대상",
+          "fields": [
+            "Name"
+          ],
+          "recordCount": 1
+        }
+      ],
+      "unitTestNotes": {
+        "setupGuidance": [
+          "Account 테스트 레코드를 insert한다.",
+          "insert된 Account Id를 Set<Id>로 전달한다."
+        ],
+        "assertions": [
+          "반환 결과가 null이 아닌지 검증한다.",
+          "반환 결과 크기가 1인지 검증한다."
+        ],
+        "requiresStartStopTest": false,
+        "requiresBulkCoverage": false,
+        "mockingNeeds": [],
+        "specialConsiderations": [
+          "실제 ProcessResult 필드가 있으면 필드별 assertion을 추가한다."
+        ]
+      },
+      "e2eValidationNotes": {
+        "setupGuidance": [
+          "TEST_AGENT_ prefix를 가진 Account 레코드를 준비한다."
+        ],
+        "executionSteps": [
+          "Anonymous Apex 또는 승인된 호출 경로로 markAccounts를 실행한다."
+        ],
+        "observations": [
+          "실행 결과와 관련 Account 변경 여부를 확인한다."
+        ],
+        "requiresOrgDataMutation": true,
+        "requiresUserApproval": true,
+        "cleanupSteps": [
+          "생성한 TEST_AGENT_ Account를 삭제한다."
+        ],
+        "specialConsiderations": [
+          "실제 org 데이터 변경 전 사용자 승인이 필요하다."
+        ]
+      },
+      "risks": [],
+      "assumptions": [
+        "markAccounts는 Account Id 단위로 결과를 반환한다."
+      ],
+      "unknowns": [
+        "ProcessResult의 세부 필드와 성공/실패 의미"
+      ],
+      "cleanupConsiderations": [
+        "E2E 검증에서 생성한 Account는 cleanup-manifest.json에 기록해야 한다."
+      ]
+    }
+  ],
+  "assumptions": [
+    "샘플 파일은 schema 예시이며 실제 source inspection 결과가 아니다."
+  ],
+  "unknowns": [],
+  "followUpQuestions": [],
+  "approval": {
+    "required": true,
+    "stage": "scenario",
+    "status": "PENDING",
+    "approvedBy": null,
+    "approvedAt": null
+  }
+}

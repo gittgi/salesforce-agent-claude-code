@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "example-unit-test",
+  "createdAt": "2026-07-08T00:00:00+09:00",
+  "orgAlias": "lab-hub",
+  "scenarioInput": {
+    "path": "test-results/example-scenario/scenario.json",
+    "schemaVersion": "1.0",
+    "approvalStatus": "APPROVED"
+  },
+  "target": {
+    "type": "ApexClass",
+    "component": "ExampleService",
+    "entryPoint": "processAccounts",
+    "sourceRef": null,
+    "sourceTargets": [
+      {
+        "path": "force-app/main/default/classes/ExampleService.cls",
+        "type": "ApexClass",
+        "component": "ExampleService",
+        "entryPoint": "processAccounts",
+        "changeKind": "REQUESTED"
+      }
+    ]
+  },
+  "generatedFiles": [
+    {
+      "path": "force-app/main/default/classes/ExampleService_Test.cls",
+      "type": "ApexClass",
+      "purpose": "Scenario-based Apex test class"
+    },
+    {
+      "path": "force-app/main/default/classes/ExampleService_Test.cls-meta.xml",
+      "type": "ApexClassMeta",
+      "purpose": "Apex test class metadata"
+    }
+  ],
+  "modifiedFiles": [],
+  "testClasses": [
+    {
+      "className": "ExampleService_Test",
+      "path": "force-app/main/default/classes/ExampleService_Test.cls",
+      "methods": [
+        {
+          "methodName": "shouldProcessAccounts_WhenValidInput",
+          "scenarioIds": ["SCN-001"]
+        }
+      ]
+    }
+  ],
+  "deployment": {
+    "attempted": true,
+    "status": "SUCCEEDED",
+    "method": "MCP",
+    "jobId": "0Af000000000001",
+    "details": [
+      "Deployed ExampleService_Test with RunSpecifiedTests."
+    ]
+  },
+  "testRun": {
+    "attempted": true,
+    "status": "PASSED",
+    "testRunId": "707000000000001",
+    "testsRan": 1,
+    "passing": 1,
+    "failing": 0,
+    "skipped": 0,
+    "durationMs": 250,
+    "failures": []
+  },
+  "coverage": [
+    {
+      "name": "ExampleService",
+      "type": "ApexClass",
+      "percentage": 95,
+      "coveredLines": [1, 2, 3],
+      "uncoveredLines": [4]
+    }
+  ],
+  "scenarioTraceability": [
+    {
+      "scenarioId": "SCN-001",
+      "status": "COVERED",
+      "testClass": "ExampleServiceTest",
+      "testMethods": ["shouldProcessAccounts_WhenValidInput"],
+      "notes": [
+        "Happy path covered with meaningful assertions."
+      ]
+    }
+  ],
+  "fixRequests": [],
+  "assumptions": [
+    "Scenario approval was provided before test generation."
+  ],
+  "unknowns": [],
+  "approval": {
+    "required": true,
+    "stage": "test-code",
+    "status": "APPROVED",
+    "approvedBy": "user",
+    "approvedAt": "2026-07-08T00:00:00+09:00"
+  }
+}
