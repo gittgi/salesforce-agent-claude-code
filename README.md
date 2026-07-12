@@ -2,7 +2,7 @@
 
 Claude Code agent definitions for a Salesforce testing workflow.
 
-This repository is being built around four cooperating agents. The first two are currently defined under `.claude/agents/`; the remaining agents are planned next.
+This repository is being built around four cooperating agents. The first three are currently defined under `.claude/agents/`; the orchestration agent is planned next.
 
 ## Agents
 
@@ -10,7 +10,7 @@ This repository is being built around four cooperating agents. The first two are
 | --- | --- | --- |
 | `salesforce-test-scenario-agent` | Defined | Understand changed or explicitly selected Salesforce code and produce shared test scenarios. |
 | `salesforce-apex-unit-test-agent` | Defined | Reuse, create, or update Apex test code from approved scenarios, deploy test-only metadata, run Apex tests, and report results. |
-| `salesforce-e2e-validation-agent` | Planned | Validate approved scenarios against a real non-production org through UI/API/SOQL observations and cleanup. |
+| `salesforce-e2e-validation-agent` | Defined | Validate approved scenarios against a real non-production org through UI/API/SOQL observations and cleanup. |
 | `salesforce-test-orchestration-agent` | Planned | Coordinate the other agents, enforce approvals, collect artifacts, and decide the next step. |
 
 ## Orchestration Flow
@@ -73,11 +73,12 @@ The Apex unit test agent writes:
 - `fix-requests.json` when needed
 - `generated-test-diff.patch` when useful
 
-The future E2E validation agent is expected to write:
+The E2E validation agent writes:
 
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
 - `cleanup-manifest.json`
+- `fix-requests.json` when needed
 - optional evidence files
 
 ## Approval Gates
@@ -103,7 +104,9 @@ No agent should skip its gate.
 
 - `.claude/agents/salesforce-test-scenario-agent.md`
 - `.claude/agents/salesforce-apex-unit-test-agent.md`
+- `.claude/agents/salesforce-e2e-validation-agent.md`
 - `schemas/scenario.schema.json`
 - `schemas/unit-test-result.schema.json`
+- `schemas/e2e-validation-result.schema.json`
 - `templates/`
 - `examples/`

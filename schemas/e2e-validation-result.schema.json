@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.salesforce-agent/schemas/e2e-validation-result.schema.json",
+  "title": "Salesforce E2E Validation Agent Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "createdAt",
+    "orgAlias",
+    "scenarioInput",
+    "target",
+    "validationScope",
+    "orgSafety",
+    "dataSetup",
+    "validationResults",
+    "cleanup",
+    "evidence",
+    "fixRequests",
+    "assumptions",
+    "unknowns",
+    "approval"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "orgAlias": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "scenarioInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schemaVersion", "approvalStatus"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "approvalStatus": { "type": "string", "minLength": 1 }
+      }
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "validationScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executionMode", "channels", "scenarioIds"],
+      "properties": {
+        "executionMode": {
+          "type": "string",
+          "enum": ["READ_ONLY", "MUTATING", "MIXED", "NOT_RUN"]
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["UI", "API", "SOQL", "MCP", "CLI", "MANUAL_OBSERVATION"]
+          }
+        },
+        "scenarioIds": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^SCN-[0-9]{3}$" }
+        }
+      }
+    },
+    "orgSafety": {
+      "$ref": "#/$defs/orgSafety"
+    },
+    "dataSetup": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dataSetup" }
+    },
+    "validationResults": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/validationResult" }
+    },
+    "cleanup": {
+      "$ref": "#/$defs/cleanup"
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "fixRequests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fixRequest" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "stage", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "stage": {
+          "type": "string",
+          "enum": ["e2e-validation"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "APPROVED", "REJECTED"]
+        },
+        "approvedBy": {
+          "type": ["string", "null"]
+        },
+        "approvedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "component", "entryPoint", "sourceTargets"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "component": { "type": "string", "minLength": 1 },
+        "entryPoint": { "type": ["string", "null"] },
+        "sourceRef": { "type": ["string", "null"] },
+        "sourceTargets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceTarget" }
+        }
+      }
+    },
+    "sourceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "type"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "component": { "type": ["string", "null"] },
+        "entryPoint": { "type": ["string", "null"] },
+        "changeKind": {
+          "type": ["string", "null"],
+          "enum": ["ADDED", "MODIFIED", "DELETED", "RENAMED", "REQUESTED", "UNKNOWN", null]
+        }
+      }
+    },
+    "orgSafety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked", "status", "orgType", "isSandbox", "productionBlocked", "details"],
+      "properties": {
+        "checked": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["PASSED", "FAILED", "BLOCKED"]
+        },
+        "orgType": { "type": ["string", "null"] },
+        "isSandbox": { "type": ["boolean", "null"] },
+        "productionBlocked": { "type": "boolean" },
+        "details": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "dataSetup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenarioId", "object", "purpose", "recordIds", "externalKeys", "status", "cleanupRequired"],
+      "properties": {
+        "scenarioId": { "type": "string", "pattern": "^SCN-[0-9]{3}$" },
+        "object": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 },
+        "recordIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "externalKeys": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PLANNED", "CREATED", "SKIPPED", "FAILED", "CLEANED"]
+        },
+        "cleanupRequired": { "type": "boolean" }
+      }
+    },
+    "validationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenarioId",
+        "status",
+        "validationType",
+        "steps",
+        "observations",
+        "expectedResult",
+        "actualResult",
+        "evidenceRefs",
+        "risks",
+        "failureClassification"
+      ],
+      "properties": {
+        "scenarioId": { "type": "string", "pattern": "^SCN-[0-9]{3}$" },
+        "status": {
+          "type": "string",
+          "enum": ["PASSED", "FAILED", "BLOCKED", "SKIPPED"]
+        },
+        "validationType": {
+          "type": "string",
+          "enum": ["UI", "API", "SOQL", "MCP", "CLI", "MANUAL_OBSERVATION", "MIXED"]
+        },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "observations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "expectedResult": { "type": "string", "minLength": 1 },
+        "actualResult": { "type": "string", "minLength": 1 },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "risks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/risk" }
+        },
+        "failureClassification": {
+          "type": ["string", "null"],
+          "enum": [
+            "PRODUCTION_CODE",
+            "METADATA_ORG_CONFIG",
+            "DATA_SETUP",
+            "PERMISSION_SHARING",
+            "AUTOMATION_SIDE_EFFECT",
+            "SCENARIO_AMBIGUITY",
+            "UNKNOWN",
+            null
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status", "manifestPath", "records", "notes"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_REQUIRED", "PENDING", "COMPLETED", "FAILED", "PARTIAL"]
+        },
+        "manifestPath": { "type": ["string", "null"] },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/cleanupRecord" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "cleanupRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object", "recordId", "externalKey", "action", "status"],
+      "properties": {
+        "object": { "type": "string", "minLength": 1 },
+        "recordId": { "type": ["string", "null"] },
+        "externalKey": { "type": ["string", "null"] },
+        "action": {
+          "type": "string",
+          "enum": ["DELETE", "UPDATE", "RESTORE", "NONE"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "CLEANED", "SKIPPED", "FAILED"]
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "pathOrRef", "description"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": ["SOQL_RESULT", "API_RESPONSE", "UI_SCREENSHOT", "LOG_EXCERPT", "MANUAL_NOTE", "OTHER"]
+        },
+        "pathOrRef": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "description"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH"]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "mitigation": { "type": ["string", "null"] }
+      }
+    },
+    "fixRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "target", "severity", "description", "evidence", "recommendedOwner", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": [
+            "PRODUCTION_CODE",
+            "METADATA_ORG_CONFIG",
+            "DATA_SETUP",
+            "PERMISSION_SHARING",
+            "AUTOMATION_SIDE_EFFECT",
+            "SCENARIO_AMBIGUITY",
+            "OTHER"
+          ]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "severity": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH", "BLOCKER"]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "recommendedOwner": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["OPEN", "RESOLVED", "DEFERRED"]
+        }
+      }
+    }
+  }
+}

@@ -36,11 +36,18 @@ Apex unit test agent artifacts:
 - `fix-requests.json` when production code, metadata, or org configuration appears to be the root cause
 - `generated-test-diff.patch` when useful for review
 
-Future validation artifacts:
+E2E validation agent artifacts:
+
+- `e2e-validation-result.json`
+- `e2e-validation-report.md`
+- `cleanup-manifest.json`
+- `fix-requests.json` when production code, metadata, permissions, automation, data setup, or org configuration appears to be the root cause
+- `evidence/` when useful for SOQL, API, UI, log, or manual observation evidence
+
+Future orchestration artifacts:
 
 - `fix-requests.json`
 - `report.md`
-- `cleanup-manifest.json`
 - `validation.xlsx`
 
 ## Approval Gates
@@ -49,7 +56,7 @@ The agent uses three explicit approval gates:
 
 1. Scenario approval
 2. Apex test class creation/modification approval
-3. Dev Validation execution approval
+3. E2E validation and org data mutation approval
 
 No execution step can skip its approval gate.
 
@@ -65,7 +72,7 @@ Production orgs are always blocked.
 
 Non-production orgs are allowed, including Developer Edition, scratch orgs, and sandboxes. Unknown non-sandbox orgs are treated as production-like unless explicitly classified as non-production in configuration.
 
-Dev Validation may mutate org data after approval. Test data must be tagged with a `TEST_AGENT_` prefix and cleanup manifests must be written.
+E2E validation may mutate org data after approval. Test data must be tagged with a `TEST_AGENT_` or scenario-specific prefix when possible, and cleanup manifests must be written.
 
 ## Skills
 

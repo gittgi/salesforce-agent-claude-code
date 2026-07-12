@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "example-e2e-validation",
+  "createdAt": "2026-07-12T00:00:00+09:00",
+  "orgAlias": "lab-hub",
+  "scenarioInput": {
+    "path": "test-results/example-scenario/scenario.json",
+    "schemaVersion": "1.0",
+    "approvalStatus": "APPROVED"
+  },
+  "target": {
+    "type": "ApexClass",
+    "component": "ExampleService",
+    "entryPoint": "processAccounts",
+    "sourceRef": null,
+    "sourceTargets": [
+      {
+        "path": "force-app/main/default/classes/ExampleService.cls",
+        "type": "ApexClass",
+        "component": "ExampleService",
+        "entryPoint": "processAccounts",
+        "changeKind": "REQUESTED"
+      }
+    ]
+  },
+  "validationScope": {
+    "executionMode": "MUTATING",
+    "channels": ["SOQL", "MCP"],
+    "scenarioIds": ["SCN-001"]
+  },
+  "orgSafety": {
+    "checked": true,
+    "status": "PASSED",
+    "orgType": "Developer Edition",
+    "isSandbox": false,
+    "productionBlocked": false,
+    "details": [
+      "Organization type was checked before mutation.",
+      "Org was classified as non-production for this validation."
+    ]
+  },
+  "dataSetup": [
+    {
+      "scenarioId": "SCN-001",
+      "object": "Account",
+      "purpose": "E2E validation input record",
+      "recordIds": ["001000000000001AAA"],
+      "externalKeys": ["TEST_AGENT_EXAMPLE_001"],
+      "status": "CREATED",
+      "cleanupRequired": true
+    }
+  ],
+  "validationResults": [
+    {
+      "scenarioId": "SCN-001",
+      "status": "PASSED",
+      "validationType": "SOQL",
+      "steps": [
+        "Create a tagged Account record.",
+        "Execute the approved validation path.",
+        "Query the Account result fields."
+      ],
+      "observations": [
+        "The expected Account field value was observed by SOQL."
+      ],
+      "expectedResult": "Account is processed successfully.",
+      "actualResult": "Account was processed successfully.",
+      "evidenceRefs": ["EVID-001"],
+      "risks": [],
+      "failureClassification": null
+    }
+  ],
+  "cleanup": {
+    "required": true,
+    "status": "COMPLETED",
+    "manifestPath": "test-results/example-e2e-validation/cleanup-manifest.json",
+    "records": [
+      {
+        "object": "Account",
+        "recordId": "001000000000001AAA",
+        "externalKey": "TEST_AGENT_EXAMPLE_001",
+        "action": "DELETE",
+        "status": "CLEANED"
+      }
+    ],
+    "notes": [
+      "Created test Account was deleted after validation."
+    ]
+  },
+  "evidence": [
+    {
+      "id": "EVID-001",
+      "type": "SOQL_RESULT",
+      "pathOrRef": "test-results/example-e2e-validation/evidence/scn-001-soql.json",
+      "description": "SOQL result showing the expected processed Account value."
+    }
+  ],
+  "fixRequests": [],
+  "assumptions": [
+    "Scenario approval and E2E validation approval were provided before execution."
+  ],
+  "unknowns": [],
+  "approval": {
+    "required": true,
+    "stage": "e2e-validation",
+    "status": "APPROVED",
+    "approvedBy": "user",
+    "approvedAt": "2026-07-12T00:00:00+09:00"
+  }
+}
