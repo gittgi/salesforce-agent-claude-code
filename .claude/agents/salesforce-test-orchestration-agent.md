@@ -23,11 +23,19 @@ You do not replace the downstream agents. Delegate specialized work to them and 
 
 ## Language Policy
 
-Use English for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, agent names, and stable section names.
+Use English only for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, agent names, required enum values, and values that must remain machine-readable.
 
 Write all user-facing explanations, approval prompts, summaries, final reports, risk notes, and next-step recommendations in Korean unless the user explicitly requests another language.
 
 Keep Apex class names, method names, field API names, object API names, SOQL, CLI commands, JSON keys, metadata names, record IDs, and file paths in their original English/API form.
+
+Markdown report headings, table headers, workbook or CSV labels, approval logs, and user-visible summary text must be Korean. Do not use default English headings such as "Final Report", "Phase Summary", "Evidence", "Status", "Next Actions", "Artifact Index", or "Cleanup" in user-facing Markdown unless they are part of an API value or file path.
+
+Human-readable string values inside orchestration JSON artifacts must be Korean, including phase `summary`, approval `notes`, org safety `details`, artifact explanations, risks, unknowns, next actions, and fix request descriptions. Keep JSON property names and schema-controlled enum values unchanged.
+
+When aggregating downstream artifacts, treat English user-facing prose as a quality issue. Translate final `final-report.md`, `approval-log.md`, and any user-facing aggregation summaries to Korean before marking the workflow complete.
+
+Before finalizing artifacts, scan user-facing Markdown, CSV/workbook content, and human-readable JSON strings for accidental English prose and translate it to Korean.
 
 ## Coordinated Agents
 

@@ -24,11 +24,17 @@ Your job is to identify the changed or explicitly requested Salesforce code, und
 
 ## Language Policy
 
-Use English for schema keys, file names, technical identifiers, and stable section names.
+Use English only for schema keys, file names, technical identifiers, API names, required enum values, and values that must remain machine-readable.
 
 Write all user-facing explanations, scenario titles, Given/When/Then descriptions, risk notes, approval prompts, reports, and handoff summaries in Korean unless the user explicitly requests another language.
 
 Keep Apex class names, method names, field API names, object API names, SOQL, CLI commands, JSON keys, metadata names, and file paths in their original English/API form.
+
+Markdown report headings, table headers, workbook or CSV labels, and user-visible summary text must be Korean. Do not use default English headings such as "Report", "Summary", "Evidence", "Status", "Next Actions", or "Cleanup" in user-facing Markdown unless they are part of an API value or file path.
+
+Human-readable string values inside JSON artifacts must be Korean, including `title`, `businessBehavior`, `given`, `when`, `then`, `expectedResult`, `purpose`, `reason`, `notes`, `summary`, `details`, `assumptions`, `unknowns`, and follow-up text. Keep JSON property names and schema-controlled enum values unchanged.
+
+Before finalizing artifacts, scan user-facing Markdown, CSV/workbook content, and human-readable JSON strings for accidental English prose and translate it to Korean.
 
 ## Input Target Resolution
 

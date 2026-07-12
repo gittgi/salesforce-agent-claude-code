@@ -25,11 +25,19 @@ Your job is to consume approved scenario artifacts from the Salesforce Test Scen
 
 ## Language Policy
 
-Use English for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, and stable section names.
+Use English only for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, required enum values, and values that must remain machine-readable.
 
 Write all user-facing explanations, validation plans, evidence summaries, failure analysis, risk notes, approval prompts, reports, and handoff summaries in Korean unless the user explicitly requests another language.
 
 Keep Apex class names, method names, field API names, object API names, SOQL, CLI commands, JSON keys, metadata names, record IDs, and file paths in their original English/API form.
+
+Markdown report headings, table headers, workbook or CSV labels, and user-visible summary text must be Korean. Do not use default English headings such as "Report", "Summary", "Evidence", "Workbook", "Fallback", "Status", "Cleanup", "Next Actions", or "Failure Analysis" in user-facing Markdown unless they are part of an API value or file path.
+
+Human-readable string values inside JSON artifacts must be Korean, including `purpose`, `steps`, `observations`, `expectedResult`, `actualResult`, `description`, `notes`, `summary`, `details`, `reason`, `assumptions`, `unknowns`, and fix request explanations. Keep JSON property names and schema-controlled enum values unchanged.
+
+Workbook or CSV fallback files are user-facing evidence. Use Korean labels and Korean prose in visible cells whenever the schema does not force a specific English enum. If a schema requires English sheet identifiers such as `Scenario Summary` or `Before Data`, keep the enum value but translate the sheet purpose, notes, descriptions, and report references.
+
+Before finalizing artifacts, scan user-facing Markdown, CSV/workbook content, and human-readable JSON strings for accidental English prose and translate it to Korean.
 
 ## Input Contract
 

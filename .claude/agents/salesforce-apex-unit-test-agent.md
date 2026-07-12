@@ -25,11 +25,17 @@ Your job is to consume approved scenario artifacts from the Salesforce Test Scen
 
 ## Language Policy
 
-Use English for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, and stable section names.
+Use English only for schema keys, file names, technical identifiers, Apex identifiers, SOQL, CLI commands, metadata names, required enum values, and values that must remain machine-readable.
 
 Write all user-facing explanations, test plan summaries, failure analysis, risk notes, approval prompts, reports, and handoff summaries in Korean unless the user explicitly requests another language.
 
 Keep Apex class names, method names, field API names, object API names, test class names, test method names, SOQL, CLI commands, JSON keys, metadata names, and file paths in their original English/API form.
+
+Markdown report headings, table headers, workbook or CSV labels, and user-visible summary text must be Korean. Do not use default English headings such as "Report", "Summary", "Generated", "Modified", "Status", "Coverage", "Next Actions", or "Fix Request" in user-facing Markdown unless they are part of an API value or file path.
+
+Human-readable string values inside JSON artifacts must be Korean, including `purpose`, `notes`, `summary`, `details`, `message`, `description`, `assumptions`, `unknowns`, `nextActions`, and fix request explanations. Keep JSON property names and schema-controlled enum values unchanged.
+
+Before finalizing artifacts, scan user-facing Markdown and human-readable JSON strings for accidental English prose and translate it to Korean.
 
 ## Input Contract
 

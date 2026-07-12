@@ -6,8 +6,8 @@
 - Org Alias: `<orgAlias>`
 - 대상 유형: `<target.type>`
 - 대상 컴포넌트: `<target.component>`
-- Entry Point: `<target.entryPoint>`
-- Source Ref: `<target.sourceRef>`
+- 진입점: `<target.entryPoint>`
+- 소스 참조: `<target.sourceRef>`
 
 ## 변경 또는 명시 코드 요약
 
@@ -44,15 +44,15 @@
 - 대상 파일: `<sourceTarget.path>`
 - 비즈니스 동작: `<businessBehavior>`
 
-#### Given
+#### Given / 전제
 
 `<given>`
 
-#### When
+#### When / 실행
 
 `<when>`
 
-#### Then
+#### Then / 결과
 
 `<then>`
 
@@ -66,23 +66,23 @@
 | --- | --- | --- | --- |
 | `<object>` | `<purpose>` | `<fields>` | `<recordCount>` |
 
-#### Unit Test 관점 메모
+#### 단위 테스트 관점 메모
 
-- Setup: `<unitTestNotes.setupGuidance>`
-- Assertions: `<unitTestNotes.assertions>`
+- 준비: `<unitTestNotes.setupGuidance>`
+- 검증: `<unitTestNotes.assertions>`
 - `Test.startTest()` / `Test.stopTest()` 필요: `<unitTestNotes.requiresStartStopTest>`
-- Bulk coverage 필요: `<unitTestNotes.requiresBulkCoverage>`
+- 대량 처리 coverage 필요: `<unitTestNotes.requiresBulkCoverage>`
 - Mocking 필요사항: `<unitTestNotes.mockingNeeds>`
 - 특이사항: `<unitTestNotes.specialConsiderations>`
 
 #### E2E 검증 관점 메모
 
-- Setup: `<e2eValidationNotes.setupGuidance>`
+- 준비: `<e2eValidationNotes.setupGuidance>`
 - 실행 단계: `<e2eValidationNotes.executionSteps>`
 - 관찰 포인트: `<e2eValidationNotes.observations>`
 - Org 데이터 변경 필요: `<e2eValidationNotes.requiresOrgDataMutation>`
 - 사용자 승인 필요: `<e2eValidationNotes.requiresUserApproval>`
-- Cleanup: `<e2eValidationNotes.cleanupSteps>`
+- 정리 작업: `<e2eValidationNotes.cleanupSteps>`
 - 특이사항: `<e2eValidationNotes.specialConsiderations>`
 
 #### 리스크
@@ -97,7 +97,7 @@
 
 - `<unknowns>`
 
-#### Cleanup 고려사항
+#### 정리 작업 고려사항
 
 - `<cleanupConsiderations>`
 

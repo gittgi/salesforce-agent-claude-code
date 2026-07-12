@@ -6,8 +6,8 @@
 - Org Alias: `<orgAlias>`
 - 대상 유형: `<target.type>`
 - 대상 컴포넌트: `<target.component>`
-- Entry Point: `<target.entryPoint>`
-- Source Ref: `<target.sourceRef>`
+- 진입점: `<target.entryPoint>`
+- 소스 참조: `<target.sourceRef>`
 
 ## 대상 결정 근거
 
