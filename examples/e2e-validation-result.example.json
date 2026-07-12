@@ -135,6 +135,12 @@
       }
     ],
     "comparisonKeys": ["scenarioId", "object", "recordId", "externalKey"],
+    "fallback": {
+      "used": false,
+      "reason": null,
+      "directory": null,
+      "files": []
+    },
     "notes": [
       "Created records were represented as NOT_EXISTED_BEFORE in the Before Data comparison."
     ]

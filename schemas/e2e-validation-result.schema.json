@@ -305,7 +305,7 @@
     "workbook": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "status", "sheets", "comparisonKeys", "notes"],
+      "required": ["path", "status", "sheets", "comparisonKeys", "fallback", "notes"],
       "properties": {
         "path": { "type": ["string", "null"] },
         "status": {
@@ -319,6 +319,9 @@
         "comparisonKeys": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "fallback": {
+          "$ref": "#/$defs/workbookFallback"
         },
         "notes": {
           "type": "array",
@@ -347,6 +350,48 @@
         "status": {
           "type": "string",
           "enum": ["PLANNED", "WRITTEN", "SKIPPED", "FAILED"]
+        },
+        "rowCount": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "workbookFallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "reason", "directory", "files"],
+      "properties": {
+        "used": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] },
+        "directory": { "type": ["string", "null"] },
+        "files": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/workbookFallbackFile" }
+        }
+      }
+    },
+    "workbookFallbackFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logicalSheet", "path", "status", "rowCount"],
+      "properties": {
+        "logicalSheet": {
+          "type": "string",
+          "enum": [
+            "Scenario Summary",
+            "Before Data",
+            "Inserted Test Data",
+            "After Data",
+            "Diff",
+            "Cleanup Result",
+            "Evidence"
+          ]
+        },
+        "path": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["WRITTEN", "SKIPPED", "FAILED"]
         },
         "rowCount": {
           "type": ["integer", "null"],

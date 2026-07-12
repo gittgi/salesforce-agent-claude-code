@@ -41,6 +41,7 @@ E2E validation agent artifacts:
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
 - `validation-workbook.xlsx` when org data is created, updated, queried, or compared
+- `workbook-fallback/*.csv` when Excel MCP is unavailable or workbook creation fails
 - `cleanup-manifest.json`
 - `fix-requests.json` when production code, metadata, permissions, automation, data setup, or org configuration appears to be the root cause
 - `evidence/` when useful for SOQL, API, UI, log, or manual observation evidence
@@ -77,6 +78,8 @@ E2E validation may mutate org data after approval. Test data must be tagged with
 
 When E2E validation creates, updates, queries, or compares org data, the agent writes a before/after Excel workbook with scenario summary, before data, inserted test data, after data, diff, cleanup result, and evidence sheets.
 
+If Excel MCP is unavailable or workbook creation fails, the agent writes equivalent CSV fallback files under `test-results/<session-id>/workbook-fallback/` and records the fallback details in `e2e-validation-result.json`.
+
 ## Skills
 
 Private skills whose names start with `salesforce-` are excluded from this project unless the user explicitly changes the policy.
@@ -111,5 +114,7 @@ The Python executor must not obscure that the intended agent is Claude Code itse
 The default MCP server for Salesforce operations is `salesforce_dx`.
 
 The E2E validation agent may also use the `excel` MCP server for local workbook artifacts.
+
+When the `excel` MCP server is unavailable, E2E validation falls back to local CSV artifacts instead of dropping before/after comparison evidence.
 
 Other configured MCP servers, such as NotebookLM and internal utility runtimes, are not part of the default Salesforce agent workflow unless the user explicitly changes the policy.

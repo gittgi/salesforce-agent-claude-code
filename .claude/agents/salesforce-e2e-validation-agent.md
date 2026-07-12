@@ -143,6 +143,7 @@ Allowed artifact edits:
 - `test-results/<session-id>/e2e-validation-result.json`
 - `test-results/<session-id>/e2e-validation-report.md`
 - `test-results/<session-id>/validation-workbook.xlsx` when validation uses org data
+- `test-results/<session-id>/workbook-fallback/*.csv` when Excel MCP is unavailable or workbook creation fails
 - `test-results/<session-id>/cleanup-manifest.json`
 - `test-results/<session-id>/fix-requests.json` when fix requests exist
 - `test-results/<session-id>/evidence/**` when evidence files are useful
@@ -170,6 +171,15 @@ Use Excel MCP for workbook operations:
 - write scenario summary, before data, inserted test data, after data, diff, cleanup result, and evidence sheets
 - preserve record IDs, external keys, scenario IDs, queried field names, and comparison keys exactly
 - keep workbook data traceable to `scenarioId` and evidence references
+
+If Excel MCP is unavailable or workbook creation fails:
+
+- do not discard before/after observations, inserted test data, diff rows, cleanup results, or evidence references
+- write the same logical tables as CSV files under `test-results/<session-id>/workbook-fallback/`
+- use these fallback CSV names when applicable: `scenario-summary.csv`, `before-data.csv`, `inserted-test-data.csv`, `after-data.csv`, `diff.csv`, `cleanup-result.csv`, and `evidence.csv`
+- set `e2e-validation-result.json.workbook.status` to `FAILED` if Excel MCP failed after an attempted workbook write
+- set `e2e-validation-result.json.workbook.fallback.used` to `true` and record the fallback directory, file paths, and failure reason
+- continue validation only if the fallback CSV files preserve enough evidence to compare expected and actual outcomes
 
 Allowed Bash examples:
 
@@ -199,15 +209,15 @@ Forbidden Bash examples:
 5. Build a validation plan and cleanup plan.
 6. Confirm E2E approval if mutation or execution is not already approved.
 7. Capture pre-validation observations when relevant.
-8. Write pre-validation observations to `validation-workbook.xlsx` when org data is involved.
+8. Write pre-validation observations to `validation-workbook.xlsx`, or CSV fallback files when Excel MCP is unavailable, when org data is involved.
 9. Create or prepare approved test data.
-10. Write inserted or modified test data records to the workbook.
+10. Write inserted or modified test data records to the workbook or fallback CSV files.
 11. Execute validation steps.
 12. Capture actual results and evidence.
-13. Write post-validation observations to the workbook.
-14. Compare expected and actual outcomes, including workbook diff rows when data changed.
+13. Write post-validation observations to the workbook or fallback CSV files.
+14. Compare expected and actual outcomes, including workbook or fallback diff rows when data changed.
 15. Cleanup approved generated or modified records.
-16. Write cleanup results to the workbook.
+16. Write cleanup results to the workbook or fallback CSV files.
 17. Classify failures and write fix requests when needed.
 18. Write E2E validation artifacts and summarize status.
 
@@ -246,6 +256,15 @@ Workbook comparison rules:
 - If before data cannot exist for a created record, write `NOT_EXISTED_BEFORE` instead of leaving comparison ambiguous.
 - If a scenario is read-only and does not need workbook comparison, record that reason in `e2e-validation-result.json.workbook.notes`.
 
+Workbook fallback rules:
+
+- Prefer Excel MCP first for workbook creation.
+- If Excel MCP is not connected, times out, or returns an unrecoverable workbook error, write CSV fallback files under `test-results/<session-id>/workbook-fallback/`.
+- Keep fallback CSV headers aligned with the corresponding workbook sheet columns.
+- Reference fallback CSV files from `e2e-validation-result.json.workbook.fallback.files`.
+- Reference important fallback CSV files from the `evidence` array when they are needed to prove pass/fail status.
+- Do not mark a scenario as passed solely because fallback files exist; pass/fail still depends on expected versus actual comparison.
+
 ## Failure Classification
 
 Classify each failed or blocked scenario as one of:
@@ -267,6 +286,7 @@ Create or update these files under `test-results/<session-id>/`:
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
 - `validation-workbook.xlsx` when validation uses org data
+- `workbook-fallback/*.csv` when Excel MCP is unavailable or workbook creation fails
 - `cleanup-manifest.json`
 - `fix-requests.json` when fix requests exist
 

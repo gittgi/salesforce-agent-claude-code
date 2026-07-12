@@ -78,6 +78,7 @@ The E2E validation agent writes:
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
 - `validation-workbook.xlsx` when org data is created, updated, queried, or compared
+- `workbook-fallback/*.csv` when Excel MCP is unavailable or workbook creation fails
 - `cleanup-manifest.json`
 - `fix-requests.json` when needed
 - optional evidence files
@@ -96,6 +97,7 @@ No agent should skip its gate.
 
 - Use Salesforce DX MCP first.
 - Use Excel MCP for E2E validation workbooks.
+- Use CSV fallback files for E2E before/after comparisons when Excel MCP is unavailable.
 - Use Salesforce `sf` CLI v2 only as fallback.
 - Use only the `salesforce_dx` MCP server for Salesforce operations by default.
 - Do not modify production Apex from test agents.

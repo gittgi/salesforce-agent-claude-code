@@ -36,6 +36,9 @@
 - Workbook: `<workbook.path>`
 - Status: `<workbook.status>`
 - Comparison Keys: `<workbook.comparisonKeys>`
+- Fallback Used: `<workbook.fallback.used>`
+- Fallback Directory: `<workbook.fallback.directory>`
+- Fallback Reason: `<workbook.fallback.reason>`
 - Notes:
   - `<workbook.notes>`
 
@@ -44,6 +47,12 @@
 | Sheet | Purpose | Status | Rows |
 | --- | --- | --- | --- |
 | `<sheet.name>` | `<sheet.purpose>` | `<sheet.status>` | `<sheet.rowCount>` |
+
+### Workbook Fallback Files
+
+| Logical Sheet | Path | Status | Rows |
+| --- | --- | --- | --- |
+| `<logicalSheet>` | `<path>` | `<status>` | `<rowCount>` |
 
 ## 시나리오별 검증 결과
 
