@@ -31,6 +31,20 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | `<scenarioId>` | `<object>` | `<purpose>` | `<recordIds>` | `<externalKeys>` | `<status>` | `<cleanupRequired>` |
 
+## 검증 워크북
+
+- Workbook: `<workbook.path>`
+- Status: `<workbook.status>`
+- Comparison Keys: `<workbook.comparisonKeys>`
+- Notes:
+  - `<workbook.notes>`
+
+### Workbook Sheets
+
+| Sheet | Purpose | Status | Rows |
+| --- | --- | --- | --- |
+| `<sheet.name>` | `<sheet.purpose>` | `<sheet.status>` | `<sheet.rowCount>` |
+
 ## 시나리오별 검증 결과
 
 | Scenario | Status | Type | Expected | Actual | Evidence | Failure Classification |

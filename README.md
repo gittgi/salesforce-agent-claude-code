@@ -10,7 +10,7 @@ This repository is being built around four cooperating agents. The first three a
 | --- | --- | --- |
 | `salesforce-test-scenario-agent` | Defined | Understand changed or explicitly selected Salesforce code and produce shared test scenarios. |
 | `salesforce-apex-unit-test-agent` | Defined | Reuse, create, or update Apex test code from approved scenarios, deploy test-only metadata, run Apex tests, and report results. |
-| `salesforce-e2e-validation-agent` | Defined | Validate approved scenarios against a real non-production org through UI/API/SOQL observations and cleanup. |
+| `salesforce-e2e-validation-agent` | Defined | Validate approved scenarios against a real non-production org through UI/API/SOQL observations, before/after Excel workbooks, and cleanup. |
 | `salesforce-test-orchestration-agent` | Planned | Coordinate the other agents, enforce approvals, collect artifacts, and decide the next step. |
 
 ## Orchestration Flow
@@ -39,7 +39,7 @@ Orchestration Agent
   |      - Read the same approved scenario.json independently
   |      - Create approved test data only in non-production orgs
   |      - Execute org-level validation steps
-  |      - Capture observations and cleanup records
+  |      - Capture before/after observations, workbook diffs, and cleanup records
   |
   v
 Orchestration Agent
@@ -77,6 +77,7 @@ The E2E validation agent writes:
 
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
+- `validation-workbook.xlsx` when org data is created, updated, queried, or compared
 - `cleanup-manifest.json`
 - `fix-requests.json` when needed
 - optional evidence files
@@ -94,8 +95,9 @@ No agent should skip its gate.
 ## Runtime Policy
 
 - Use Salesforce DX MCP first.
+- Use Excel MCP for E2E validation workbooks.
 - Use Salesforce `sf` CLI v2 only as fallback.
-- Use only the `salesforce_dx` MCP server by default.
+- Use only the `salesforce_dx` MCP server for Salesforce operations by default.
 - Do not modify production Apex from test agents.
 - Do not run against Production orgs.
 - Keep E2E validation independent from Apex unit test execution; the orchestration agent coordinates both.

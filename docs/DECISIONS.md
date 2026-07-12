@@ -40,6 +40,7 @@ E2E validation agent artifacts:
 
 - `e2e-validation-result.json`
 - `e2e-validation-report.md`
+- `validation-workbook.xlsx` when org data is created, updated, queried, or compared
 - `cleanup-manifest.json`
 - `fix-requests.json` when production code, metadata, permissions, automation, data setup, or org configuration appears to be the root cause
 - `evidence/` when useful for SOQL, API, UI, log, or manual observation evidence
@@ -74,6 +75,8 @@ Non-production orgs are allowed, including Developer Edition, scratch orgs, and 
 
 E2E validation may mutate org data after approval. Test data must be tagged with a `TEST_AGENT_` or scenario-specific prefix when possible, and cleanup manifests must be written.
 
+When E2E validation creates, updates, queries, or compares org data, the agent writes a before/after Excel workbook with scenario summary, before data, inserted test data, after data, diff, cleanup result, and evidence sheets.
+
 ## Skills
 
 Private skills whose names start with `salesforce-` are excluded from this project unless the user explicitly changes the policy.
@@ -105,6 +108,8 @@ The Python executor must not obscure that the intended agent is Claude Code itse
 
 ## MCP Scope
 
-The only MCP server selected for this project's default workflow is `salesforce_dx`.
+The default MCP server for Salesforce operations is `salesforce_dx`.
+
+The E2E validation agent may also use the `excel` MCP server for local workbook artifacts.
 
 Other configured MCP servers, such as NotebookLM and internal utility runtimes, are not part of the default Salesforce agent workflow unless the user explicitly changes the policy.

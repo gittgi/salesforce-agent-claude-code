@@ -87,6 +87,58 @@
       "Created test Account was deleted after validation."
     ]
   },
+  "workbook": {
+    "path": "test-results/example-e2e-validation/validation-workbook.xlsx",
+    "status": "CREATED",
+    "sheets": [
+      {
+        "name": "Scenario Summary",
+        "purpose": "Scenario execution summary and final status.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "Before Data",
+        "purpose": "Records observed before validation execution.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "Inserted Test Data",
+        "purpose": "Created Account record and cleanup tracking key.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "After Data",
+        "purpose": "Records observed after validation execution.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "Diff",
+        "purpose": "Field-level expected versus actual comparison.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "Cleanup Result",
+        "purpose": "Cleanup action and status for generated test data.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      },
+      {
+        "name": "Evidence",
+        "purpose": "Evidence references used by the validation report.",
+        "status": "WRITTEN",
+        "rowCount": 1
+      }
+    ],
+    "comparisonKeys": ["scenarioId", "object", "recordId", "externalKey"],
+    "notes": [
+      "Created records were represented as NOT_EXISTED_BEFORE in the Before Data comparison."
+    ]
+  },
   "evidence": [
     {
       "id": "EVID-001",

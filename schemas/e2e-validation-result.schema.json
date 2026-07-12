@@ -16,6 +16,7 @@
     "dataSetup",
     "validationResults",
     "cleanup",
+    "workbook",
     "evidence",
     "fixRequests",
     "assumptions",
@@ -87,6 +88,9 @@
     },
     "cleanup": {
       "$ref": "#/$defs/cleanup"
+    },
+    "workbook": {
+      "$ref": "#/$defs/workbook"
     },
     "evidence": {
       "type": "array",
@@ -295,6 +299,58 @@
         "status": {
           "type": "string",
           "enum": ["PENDING", "CLEANED", "SKIPPED", "FAILED"]
+        }
+      }
+    },
+    "workbook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "status", "sheets", "comparisonKeys", "notes"],
+      "properties": {
+        "path": { "type": ["string", "null"] },
+        "status": {
+          "type": "string",
+          "enum": ["PLANNED", "CREATED", "UPDATED", "SKIPPED", "FAILED"]
+        },
+        "sheets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/workbookSheet" }
+        },
+        "comparisonKeys": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "workbookSheet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "purpose", "status"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "Scenario Summary",
+            "Before Data",
+            "Inserted Test Data",
+            "After Data",
+            "Diff",
+            "Cleanup Result",
+            "Evidence"
+          ]
+        },
+        "purpose": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["PLANNED", "WRITTEN", "SKIPPED", "FAILED"]
+        },
+        "rowCount": {
+          "type": ["integer", "null"],
+          "minimum": 0
         }
       }
     },
