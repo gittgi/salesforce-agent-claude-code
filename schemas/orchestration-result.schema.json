@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.salesforce-agent/schemas/orchestration-result.schema.json",
+  "title": "Salesforce Test Orchestration Agent Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "createdAt",
+    "runMode",
+    "overallStatus",
+    "target",
+    "orgSafety",
+    "approvals",
+    "phases",
+    "artifacts",
+    "fixRequests",
+    "risks",
+    "unknowns",
+    "nextActions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "runMode": {
+      "type": "string",
+      "enum": ["FULL", "SCENARIO_ONLY", "UNIT_ONLY", "E2E_ONLY", "REPORT_ONLY", "RERUN_FAILED"]
+    },
+    "overallStatus": {
+      "type": "string",
+      "enum": ["NOT_RUN", "PASSED", "PARTIAL", "FAILED", "NEEDS_FIX", "BLOCKED"]
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "orgSafety": {
+      "$ref": "#/$defs/orgSafety"
+    },
+    "approvals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/approval" }
+    },
+    "phases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/phase" }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "fixRequests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fixRequest" }
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "nextActions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "component", "entryPoint", "sourceRef", "scenarioInput"],
+      "properties": {
+        "type": { "type": ["string", "null"] },
+        "component": { "type": ["string", "null"] },
+        "entryPoint": { "type": ["string", "null"] },
+        "sourceRef": { "type": ["string", "null"] },
+        "scenarioInput": { "type": ["string", "null"] }
+      }
+    },
+    "orgSafety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked", "status", "orgAlias", "orgType", "isSandbox", "productionBlocked", "details"],
+      "properties": {
+        "checked": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_CHECKED", "PASSED", "FAILED", "BLOCKED"]
+        },
+        "orgAlias": { "type": ["string", "null"] },
+        "orgType": { "type": ["string", "null"] },
+        "isSandbox": { "type": ["boolean", "null"] },
+        "productionBlocked": { "type": "boolean" },
+        "details": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "required", "status", "approvedBy", "approvedAt", "notes"],
+      "properties": {
+        "gate": {
+          "type": "string",
+          "enum": ["SCENARIO", "APEX_TEST_CODE", "E2E_VALIDATION"]
+        },
+        "required": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]
+        },
+        "approvedBy": { "type": ["string", "null"] },
+        "approvedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "agent", "status", "summary", "artifactRefs", "blockingReasons"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["SCENARIO", "UNIT_TEST", "E2E_VALIDATION", "AGGREGATION"]
+        },
+        "agent": {
+          "type": ["string", "null"],
+          "enum": [
+            "salesforce-test-scenario-agent",
+            "salesforce-apex-unit-test-agent",
+            "salesforce-e2e-validation-agent",
+            "salesforce-test-orchestration-agent",
+            null
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_RUN", "PASSED", "FAILED", "BLOCKED", "SKIPPED", "PARTIAL", "NEEDS_FIX"]
+        },
+        "summary": { "type": "string" },
+        "artifactRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/artifactRef" }
+        },
+        "blockingReasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "path", "status", "sourcePhase"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["EXPECTED", "WRITTEN", "READ", "MISSING", "SKIPPED", "FAILED"]
+        },
+        "sourcePhase": {
+          "type": "string",
+          "enum": ["SCENARIO", "UNIT_TEST", "E2E_VALIDATION", "AGGREGATION"]
+        }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "path"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fixRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "target",
+        "severity",
+        "description",
+        "sourcePhases",
+        "evidence",
+        "recommendedOwner",
+        "status"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": [
+            "PRODUCTION_CODE",
+            "METADATA_ORG_CONFIG",
+            "DATA_SETUP",
+            "PERMISSION_SHARING",
+            "AUTOMATION_SIDE_EFFECT",
+            "SCENARIO_AMBIGUITY",
+            "TEST_CODE",
+            "UNKNOWN",
+            "OTHER"
+          ]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "severity": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH", "BLOCKER"]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "sourcePhases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["UNIT_TEST", "E2E_VALIDATION", "AGGREGATION"]
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "recommendedOwner": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["OPEN", "RESOLVED", "DEFERRED"]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "example-orchestration",
+  "createdAt": "2026-07-12T00:00:00+09:00",
+  "runMode": "FULL",
+  "overallStatus": "PASSED",
+  "target": {
+    "type": "ApexClass",
+    "component": "ExampleService",
+    "entryPoint": "processAccounts",
+    "sourceRef": "force-app/main/default/classes/ExampleService.cls",
+    "scenarioInput": "test-results/example-orchestration/scenario.json"
+  },
+  "orgSafety": {
+    "checked": true,
+    "status": "PASSED",
+    "orgAlias": "lab-hub",
+    "orgType": "Developer Edition",
+    "isSandbox": false,
+    "productionBlocked": false,
+    "details": [
+      "Org was checked before Apex test and E2E execution.",
+      "Org was classified as non-production."
+    ]
+  },
+  "approvals": [
+    {
+      "gate": "SCENARIO",
+      "required": true,
+      "status": "APPROVED",
+      "approvedBy": "user",
+      "approvedAt": "2026-07-12T00:00:00+09:00",
+      "notes": [
+        "User approved scenario artifacts before downstream execution."
+      ]
+    },
+    {
+      "gate": "APEX_TEST_CODE",
+      "required": true,
+      "status": "APPROVED",
+      "approvedBy": "user",
+      "approvedAt": "2026-07-12T00:00:00+09:00",
+      "notes": [
+        "User approved Apex test creation, deployment, and execution."
+      ]
+    },
+    {
+      "gate": "E2E_VALIDATION",
+      "required": true,
+      "status": "APPROVED",
+      "approvedBy": "user",
+      "approvedAt": "2026-07-12T00:00:00+09:00",
+      "notes": [
+        "User approved non-production E2E validation with cleanup."
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "name": "SCENARIO",
+      "agent": "salesforce-test-scenario-agent",
+      "status": "PASSED",
+      "summary": "Scenario artifacts were generated, validated, and approved.",
+      "artifactRefs": [
+        {
+          "type": "scenario.json",
+          "path": "test-results/example-orchestration/scenario.json"
+        },
+        {
+          "type": "scenario-review.md",
+          "path": "test-results/example-orchestration/scenario-review.md"
+        }
+      ],
+      "blockingReasons": []
+    },
+    {
+      "name": "UNIT_TEST",
+      "agent": "salesforce-apex-unit-test-agent",
+      "status": "PASSED",
+      "summary": "Apex tests passed with sufficient target coverage.",
+      "artifactRefs": [
+        {
+          "type": "unit-test-result.json",
+          "path": "test-results/example-orchestration/unit-test-result.json"
+        },
+        {
+          "type": "unit-test-report.md",
+          "path": "test-results/example-orchestration/unit-test-report.md"
+        }
+      ],
+      "blockingReasons": []
+    },
+    {
+      "name": "E2E_VALIDATION",
+      "agent": "salesforce-e2e-validation-agent",
+      "status": "PASSED",
+      "summary": "E2E validation passed, cleanup completed, and workbook evidence was produced.",
+      "artifactRefs": [
+        {
+          "type": "e2e-validation-result.json",
+          "path": "test-results/example-orchestration/e2e-validation-result.json"
+        },
+        {
+          "type": "validation-workbook.xlsx",
+          "path": "test-results/example-orchestration/validation-workbook.xlsx"
+        }
+      ],
+      "blockingReasons": []
+    },
+    {
+      "name": "AGGREGATION",
+      "agent": "salesforce-test-orchestration-agent",
+      "status": "PASSED",
+      "summary": "All requested phase outputs were aggregated into the final report.",
+      "artifactRefs": [
+        {
+          "type": "orchestration-result.json",
+          "path": "test-results/example-orchestration/orchestration-result.json"
+        },
+        {
+          "type": "final-report.md",
+          "path": "test-results/example-orchestration/final-report.md"
+        }
+      ],
+      "blockingReasons": []
+    }
+  ],
+  "artifacts": [
+    {
+      "type": "scenario.json",
+      "path": "test-results/example-orchestration/scenario.json",
+      "status": "READ",
+      "sourcePhase": "SCENARIO"
+    },
+    {
+      "type": "unit-test-result.json",
+      "path": "test-results/example-orchestration/unit-test-result.json",
+      "status": "READ",
+      "sourcePhase": "UNIT_TEST"
+    },
+    {
+      "type": "e2e-validation-result.json",
+      "path": "test-results/example-orchestration/e2e-validation-result.json",
+      "status": "READ",
+      "sourcePhase": "E2E_VALIDATION"
+    },
+    {
+      "type": "orchestration-result.json",
+      "path": "test-results/example-orchestration/orchestration-result.json",
+      "status": "WRITTEN",
+      "sourcePhase": "AGGREGATION"
+    },
+    {
+      "type": "final-report.md",
+      "path": "test-results/example-orchestration/final-report.md",
+      "status": "WRITTEN",
+      "sourcePhase": "AGGREGATION"
+    }
+  ],
+  "fixRequests": [],
+  "risks": [
+    "E2E evidence depends on the configured non-production org state."
+  ],
+  "unknowns": [],
+  "nextActions": [
+    "Review final-report.md and keep artifacts with the related change or pull request."
+  ]
+}

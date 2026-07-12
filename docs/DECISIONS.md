@@ -6,7 +6,7 @@ This document captures implementation decisions confirmed before coding.
 
 The final target runtime is Claude Code using Salesforce DX MCP tools and Salesforce `sf` CLI.
 
-During MVP construction, author and smoke test the agents first as Codex custom agents under `.codex/agents/`. Translate the stabilized definitions to Claude Code manually when ready.
+During MVP construction, author the primary agent definitions as Claude Code agents under `.claude/agents/`. Codex may still be used for local drafting, smoke testing, and translation checks.
 
 The user reviews outputs in terminal text, Markdown, and Excel-compatible files.
 
@@ -46,11 +46,12 @@ E2E validation agent artifacts:
 - `fix-requests.json` when production code, metadata, permissions, automation, data setup, or org configuration appears to be the root cause
 - `evidence/` when useful for SOQL, API, UI, log, or manual observation evidence
 
-Future orchestration artifacts:
+Orchestration agent artifacts:
 
+- `orchestration-result.json`
+- `final-report.md`
+- `approval-log.md` when approvals are requested or granted during the run
 - `fix-requests.json`
-- `report.md`
-- `validation.xlsx`
 
 ## Approval Gates
 
@@ -61,6 +62,8 @@ The agent uses three explicit approval gates:
 3. E2E validation and org data mutation approval
 
 No execution step can skip its approval gate.
+
+The orchestration agent owns gate sequencing and final aggregation. Downstream agents still enforce their own gate-specific safety rules.
 
 ## Apex Code Boundary
 

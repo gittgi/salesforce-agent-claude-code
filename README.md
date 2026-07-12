@@ -2,7 +2,7 @@
 
 Claude Code agent definitions for a Salesforce testing workflow.
 
-This repository is being built around four cooperating agents. The first three are currently defined under `.claude/agents/`; the orchestration agent is planned next.
+This repository is built around four cooperating agents defined under `.claude/agents/`.
 
 ## Agents
 
@@ -11,7 +11,7 @@ This repository is being built around four cooperating agents. The first three a
 | `salesforce-test-scenario-agent` | Defined | Understand changed or explicitly selected Salesforce code and produce shared test scenarios. |
 | `salesforce-apex-unit-test-agent` | Defined | Reuse, create, or update Apex test code from approved scenarios, deploy test-only metadata, run Apex tests, and report results. |
 | `salesforce-e2e-validation-agent` | Defined | Validate approved scenarios against a real non-production org through UI/API/SOQL observations, before/after Excel workbooks, and cleanup. |
-| `salesforce-test-orchestration-agent` | Planned | Coordinate the other agents, enforce approvals, collect artifacts, and decide the next step. |
+| `salesforce-test-orchestration-agent` | Defined | Coordinate the other agents, enforce approvals, collect artifacts, aggregate fix requests, and write the final report. |
 
 ## Orchestration Flow
 
@@ -45,8 +45,10 @@ Orchestration Agent
 Orchestration Agent
   |
   |-- Combine scenario, unit-test, and E2E results
+  |-- Validate artifact contracts
   |-- Route production-code or metadata issues as fix requests
   |-- Ask for user approval before each gated stage
+  |-- Write orchestration-result.json and final-report.md
   v
 Final report
 ```
@@ -83,6 +85,13 @@ The E2E validation agent writes:
 - `fix-requests.json` when needed
 - optional evidence files
 
+The orchestration agent writes:
+
+- `orchestration-result.json`
+- `final-report.md`
+- `approval-log.md` when approvals are requested or granted during the run
+- aggregated `fix-requests.json` when needed
+
 ## Approval Gates
 
 The orchestration agent should enforce three gates:
@@ -109,8 +118,10 @@ No agent should skip its gate.
 - `.claude/agents/salesforce-test-scenario-agent.md`
 - `.claude/agents/salesforce-apex-unit-test-agent.md`
 - `.claude/agents/salesforce-e2e-validation-agent.md`
+- `.claude/agents/salesforce-test-orchestration-agent.md`
 - `schemas/scenario.schema.json`
 - `schemas/unit-test-result.schema.json`
 - `schemas/e2e-validation-result.schema.json`
+- `schemas/orchestration-result.schema.json`
 - `templates/`
 - `examples/`
